@@ -33,15 +33,15 @@ function Movies({ user }) {
       const { data: genres } = await getGenres()
       const { data: movies } = await getMovies()
 
-      setData((prevData) => ({
-        ...prevData,
+      setData({
+        ...data,
         genres: [{ _id: '', name: 'All Genre' }, ...genres],
         movies: movies,
-      }))
+      })
     }
 
     fetchData()
-  }, [])
+  })
 
   const handleDelete = async (movie) => {
     const { movies } = data

@@ -53,7 +53,7 @@ function MovieForm() {
 
     populateGenres()
     populateMovies()
-  }, [movieId, navigate])
+  })
 
   const mapMovies = (movie) => {
     return {
