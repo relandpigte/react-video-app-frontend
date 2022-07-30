@@ -1,12 +1,13 @@
 import http from './httpService'
-const apiUrl = process.env.REACT_APP_MOVIE_API
+
+const apiEndpoint = '/movies'
 
 function movieUrl(id) {
-  return `${apiUrl}/${id}`
+  return `${apiEndpoint}/${id}`
 }
 
 export function getMovies() {
-  return http.get(apiUrl)
+  return http.get(apiEndpoint)
 }
 
 export function getMovie(id) {
@@ -20,7 +21,7 @@ export function saveMovie(movie) {
     return http.put(movieUrl(movie._id), body)
   }
 
-  return http.post(apiUrl, movie)
+  return http.post(apiEndpoint, movie)
 }
 
 export function deleteMovie(id) {

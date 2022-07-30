@@ -1,5 +1,7 @@
 import http from './httpService'
 
+const apiEndpoint = '/genres'
+
 export function getGenres() {
-  return http.get(process.env.REACT_APP_GENRE_API)
+  return http.get(apiEndpoint)
 }

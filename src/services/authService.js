@@ -1,14 +1,14 @@
 import http from './httpService'
 import jwtDecode from 'jwt-decode'
 
-const apiUrl = process.env.REACT_APP_AUTH_API
+const apiEndpoint = '/auth'
 const tokenKey = 'token'
 const currentUser = getCurrentUser()
 
 http.setJwt(getJwt())
 
 async function login(email, password) {
-  const { data: jwt } = await http.post(apiUrl, { email, password })
+  const { data: jwt } = await http.post(apiEndpoint, { email, password })
   localStorage.setItem(tokenKey, jwt)
 }
 
