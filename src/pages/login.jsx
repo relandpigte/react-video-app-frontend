@@ -6,9 +6,11 @@ import { Container, Form } from 'react-bootstrap'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useLocation } from 'react-router-dom'
+import { useUserContext } from '../context/userContext'
 
 function Login() {
   const { state } = useLocation()
+  const { setCurrentUser } = useUserContext()
 
   const [data, setData] = useState({
     user: { email: '', password: '' },
@@ -60,6 +62,8 @@ function Login() {
     try {
       const { email, password } = data.user
       await auth.login(email, password)
+
+      setCurrentUser(auth.getCurrentUser())
 
       window.location = state?.from ?? '/'
     } catch (ex) {

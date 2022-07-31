@@ -5,8 +5,10 @@ import { useState } from 'react'
 import { RenderButton, RenderInput } from '../components/common/formInputs'
 import { register } from '../services/userService'
 import { toast } from 'react-toastify'
+import { useUserContext } from '../context/userContext'
 
 function Register() {
+  const { setCurrentUser } = useUserContext()
   const [data, setData] = useState({
     user: { name: '', email: '', password: '' },
     errors: [],
@@ -58,6 +60,7 @@ function Register() {
     try {
       const response = await register(data.user)
       auth.loginWithJwt(response.headers['x-auth-token'])
+      setCurrentUser(auth.getCurrentUser())
 
       window.location = '/'
     } catch (ex) {

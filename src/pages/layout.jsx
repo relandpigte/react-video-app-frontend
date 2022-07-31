@@ -1,8 +1,10 @@
 import { Outlet, Link, NavLink } from 'react-router-dom'
 import { Navbar, Nav, Container } from 'react-bootstrap'
 import { ToastContainer } from 'react-toastify'
+import { useUserContext } from '../context/userContext'
 
-function Layout({ user }) {
+function Layout() {
+  const { currentUser } = useUserContext()
   return (
     <>
       <ToastContainer />
@@ -17,12 +19,9 @@ function Layout({ user }) {
               <Nav.Link as={NavLink} to="/">
                 Movies
               </Nav.Link>
-              <Nav.Link as={NavLink} to="/customer">
-                Customer
-              </Nav.Link>
             </Nav>
             <Nav className="navbar-right">
-              {!user && (
+              {!currentUser && (
                 <>
                   <Nav.Link as={NavLink} to="/register">
                     Register
@@ -33,10 +32,10 @@ function Layout({ user }) {
                 </>
               )}
 
-              {user && (
+              {currentUser && (
                 <>
                   <Nav.Link as={NavLink} to="/profile">
-                    {user.name}
+                    {currentUser.name}
                   </Nav.Link>
                   <Nav.Link as={NavLink} to="/logout">
                     Logout

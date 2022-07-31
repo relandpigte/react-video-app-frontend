@@ -1,10 +1,11 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
-import auth from '../../services/authService'
+import { useUserContext } from '../../context/userContext'
 
 const ProtectedRoute = ({ children, redirect = '/login' }) => {
   const { pathname } = useLocation()
+  const { currentUser } = useUserContext()
 
-  if (!auth.getCurrentUser())
+  if (!currentUser)
     return <Navigate to={redirect} state={{ from: pathname }} replace />
 
   return children ? children : <Outlet />

@@ -5,16 +5,17 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { getMovie, saveMovie } from '../services/movieServices'
 import { getGenres } from '../services/genreService'
 import { RenderInput, RenderButton, RenderSelect } from './common/formInputs'
+import { toast } from 'react-toastify'
 
 function MovieForm() {
-  const { movieId } = useParams()
-  const navigate = useNavigate()
-
   const [data, setData] = useState({
     movie: { title: '', genreId: '', numberInStock: '', dailyRentalRate: '' },
     genres: [],
     errors: {},
   })
+
+  const { movieId } = useParams()
+  const navigate = useNavigate()
 
   const schema = {
     _id: Joi.string(),
@@ -33,29 +34,27 @@ function MovieForm() {
   }
 
   useEffect(() => {
-    const populateGenres = async () => {
+    async function populateGenres() {
       const { data: genres } = await getGenres()
-      setData((prevData) => ({ ...prevData, genres }))
+      setData((prev) => ({ ...prev, genres }))
     }
 
-    const populateMovies = async () => {
-      try {
-        if (movieId === 'new') return
+    async function populateMovie() {
+      if (movieId === 'new') return
 
+      try {
         const { data: movie } = await getMovie(movieId)
-        setData((prevData) => ({ ...prevData, movie: mapMovies(movie) }))
-      } catch (ex) {
-        if (ex.response?.status === 404) {
-          navigate('/not-found')
-        }
+        setData((prev) => ({ ...prev, movie: mapToSave(movie) }))
+      } catch (error) {
+        if (error.response.status === 404) navigate('/not-found')
       }
     }
 
+    populateMovie()
     populateGenres()
-    populateMovies()
-  })
+  }, [movieId, navigate])
 
-  const mapMovies = (movie) => {
+  function mapToSave(movie) {
     return {
       _id: movie._id,
       title: movie.title,
@@ -82,8 +81,13 @@ function MovieForm() {
     setData({ ...data, errors: errors })
     if (errors) return
 
-    const movie = await saveMovie(data.movie)
-    if (movie) navigate('/')
+    try {
+      const movie = await saveMovie(data.movie)
+      if (movie) navigate('/')
+    } catch (ex) {
+      if (ex.response?.status === 403)
+        toast.error('You are not allowed to do this action.')
+    }
   }
 
   const handleChange = (e) => {
@@ -107,7 +111,6 @@ function MovieForm() {
   }
 
   const { movie, errors, genres } = data
-
   return (
     <main>
       <Container>

@@ -3,7 +3,6 @@ import jwtDecode from 'jwt-decode'
 
 const apiEndpoint = '/auth'
 const tokenKey = 'token'
-const currentUser = getCurrentUser()
 
 http.setJwt(getJwt())
 
@@ -37,7 +36,6 @@ const auth = {
   login,
   logout,
   getCurrentUser,
-  currentUser,
   loginWithJwt,
   getJwt,
 }

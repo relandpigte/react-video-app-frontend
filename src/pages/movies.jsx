@@ -6,13 +6,14 @@ import { getGenres } from '../services/genreService'
 import { Outlet, Link } from 'react-router-dom'
 import { Paginate } from '../utils/paginate'
 import { toast } from 'react-toastify'
-
+import { useUserContext } from '../context/userContext'
 import Sidebar from '../components/sidebar'
 import MoviesTable from '../components/moviesTable'
 import DataPagination from '../components/common/dataPagination'
 import SearchBox from '../components/common/searchBox'
 
-function Movies({ user }) {
+function Movies() {
+  const { currentUser } = useUserContext()
   const [data, setData] = useState({
     movies: [],
     genres: [],
@@ -33,15 +34,15 @@ function Movies({ user }) {
       const { data: genres } = await getGenres()
       const { data: movies } = await getMovies()
 
-      setData({
-        ...data,
+      setData((prev) => ({
+        ...prev,
         genres: [{ _id: '', name: 'All Genre' }, ...genres],
         movies: movies,
-      })
+      }))
     }
 
     fetchData()
-  })
+  }, [])
 
   const handleDelete = async (movie) => {
     const { movies } = data
@@ -145,7 +146,7 @@ function Movies({ user }) {
           <Col sm={9}>
             <h3>
               Movies
-              {user && (
+              {currentUser?.isAdmin && (
                 <Button as={Link} to="/movies/new" className="ms-3">
                   Add movie
                 </Button>

@@ -1,11 +1,12 @@
 import MyTable from './common/myTable'
-import auth from '../services/authService'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHeart } from '@fortawesome/free-solid-svg-icons'
 import { Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
+import { useUserContext } from '../context/userContext'
 
 function MoviesTable({ movies, onLike, onDelete, onSort, sortColumn }) {
+  const { currentUser } = useUserContext()
   const columns = [
     {
       path: 'title',
@@ -38,7 +39,7 @@ function MoviesTable({ movies, onLike, onDelete, onSort, sortColumn }) {
     ),
   }
 
-  if (auth.currentUser?.isAdmin) columns.push(deleteColumn)
+  if (currentUser?.isAdmin) columns.push(deleteColumn)
 
   return (
     <MyTable
